@@ -1,0 +1,86 @@
+{
+  "app": {
+    "title": "FIBERCUT v1.0",
+    "subtitle": "CAD Laser Tube Industriel",
+    "reset": "Réinitialiser",
+    "saveCad": "Enregistrer CAD",
+    "exportGCode": "Exporter Code G",
+    "fiberSimulation": "Simulation Laser Fibre",
+    "material": "Matériau",
+    "viewModes": {
+      "shaded": "Ombragé",
+      "wireframe": "Filaire",
+      "laser_cut": "Découpe Laser",
+      "blueprint": "Plan 2D"
+    }
+  },
+  "parameters": {
+    "title": "Paramètres d'Outillage CAD",
+    "profileSection": "Profil de Section du Tube",
+    "profiles": {
+      "round": "Rond",
+      "square": "Carré",
+      "rectangular": "Rectangulaire"
+    },
+    "standardSchedules": "Séries Standard",
+    "primaryDimensions": "Dimensions Principales",
+    "totalLength": "Longueur Totale (L)",
+    "outerDiameter": "Diamètre Extérieur (Ø)",
+    "width": "Largeur (Lg)",
+    "height": "Hauteur (Ht)",
+    "wallThickness": "Épaisseur de Paroi (E)",
+    "millimeters": "Millimètres (mm)"
+  },
+  "cutList": {
+    "title": "Liste des Découpes Laser",
+    "addHole": "Ajouter Perçage",
+    "addSlot": "Ajouter Lumière",
+    "noCuts": "Aucune découpe laser active. Cliquez sur \"Ajouter Perçage\" ci-dessus.",
+    "editTitle": "Éditer la Découpe Sélectionnée",
+    "zOffset": "Offset Z le long du Tube",
+    "holeDiameter": "Diamètre de Perçage (Ø)",
+    "slotLength": "Longueur de Lumière",
+    "slotWidth": "Largeur de Lumière",
+    "mitreAngle": "Angle de Biseau / Onglet",
+    "polarAngle": "Angle de Rotation Polaire",
+    "cutTypes": {
+      "hole": "Perçage",
+      "slot": "Lumière",
+      "mitre_start": "Onglet Début",
+      "mitre_end": "Onglet Fin"
+    }
+  },
+  "telemetry": {
+    "title": "Télémétrie Laser & Spécifications",
+    "physicalProps": "Propriétés Physiques",
+    "netWeight": "Poids Net",
+    "volume": "Volume",
+    "metalDensity": "Masse Volumique",
+    "crossSection": "Aire de Section",
+    "totalCycle": "Cycle de Découpe Total",
+    "estCycleTime": "Temps de Découpe Est.",
+    "totalCutPath": "Parcours Laser Total",
+    "cuttingSpeed": "Vitesse de Coupe",
+    "laserPower": "Puissance Laser",
+    "assistGas": "Gaz d'Assistance",
+    "csgActive": "Moteur CSG Booléen Actif",
+    "csgEvaluated": "Découpes Évaluées pour Laser Fibre"
+  },
+  "blueprint": {
+    "header": "DÉVELOPPÉ 2D DE TÔLERIE (PLAN DE FABRICATION)",
+    "sheet": "TÔLE",
+    "zoom": "Zoom",
+    "length": "LONGUEUR TOTALE",
+    "circumference": "CIRCONFÉRENCE",
+    "legendCut": "Contour de Découpe",
+    "legendPierce": "Point d'Amorçage",
+    "legendCenter": "Ligne Neutre du Tube (180°)"
+  },
+  "gcode": {
+    "title": "GÉNÉRATEUR DE CODE G LASER FIBRE CNC",
+    "copy": "Copier Code G",
+    "copied": "Copié !",
+    "download": "Télécharger Fichier .NC",
+    "format": "Format : ISO Standard / Interpolation Axe Rotatif A"
+  }
+}

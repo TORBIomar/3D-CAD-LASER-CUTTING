@@ -1,0 +1,86 @@
+{
+  "app": {
+    "title": "FIBERCUT v1.0",
+    "subtitle": "Industrial Tube Fiber Laser CAD",
+    "reset": "Reset",
+    "saveCad": "Save CAD",
+    "exportGCode": "Export G-Code",
+    "fiberSimulation": "Fiber Laser Simulation",
+    "material": "Material",
+    "viewModes": {
+      "shaded": "Shaded",
+      "wireframe": "Wireframe",
+      "laser_cut": "Laser Cut",
+      "blueprint": "Blueprint"
+    }
+  },
+  "parameters": {
+    "title": "CAD Tool Parameters",
+    "profileSection": "Tube Cross-Section Profile",
+    "profiles": {
+      "round": "Round",
+      "square": "Square",
+      "rectangular": "Rectangular"
+    },
+    "standardSchedules": "Standard Schedules",
+    "primaryDimensions": "Primary Dimensions",
+    "totalLength": "Total Length (L)",
+    "outerDiameter": "Outer Diameter (Ø)",
+    "width": "Width (W)",
+    "height": "Height (H)",
+    "wallThickness": "Wall Thickness (T)",
+    "millimeters": "Millimeters (mm)"
+  },
+  "cutList": {
+    "title": "Laser Cut List",
+    "addHole": "Add Hole",
+    "addSlot": "Add Slot",
+    "noCuts": "No active laser cuts. Click \"Add Hole\" or \"Add Slot\" above.",
+    "editTitle": "Edit Selected Cut",
+    "zOffset": "Z Offset along Tube",
+    "holeDiameter": "Hole Diameter (Ø)",
+    "slotLength": "Slot Length",
+    "slotWidth": "Slot Width",
+    "mitreAngle": "Mitre Bevel Angle",
+    "polarAngle": "Polar Rotation Angle",
+    "cutTypes": {
+      "hole": "Hole",
+      "slot": "Slot",
+      "mitre_start": "Mitre Start",
+      "mitre_end": "Mitre End"
+    }
+  },
+  "telemetry": {
+    "title": "Laser Telemetry & Specs",
+    "physicalProps": "Physical Properties",
+    "netWeight": "Net Weight",
+    "volume": "Volume",
+    "metalDensity": "Metal Density",
+    "crossSection": "Cross-Section Area",
+    "totalCycle": "Total Cut Cycle",
+    "estCycleTime": "Est. Total Cycle Time",
+    "totalCutPath": "Total Cut Path",
+    "cuttingSpeed": "Cutting Speed",
+    "laserPower": "Laser Power",
+    "assistGas": "Assist Gas",
+    "csgActive": "CSG Boolean Engine Active",
+    "csgEvaluated": "Cuts Evaluated for Fiber Laser"
+  },
+  "blueprint": {
+    "header": "2D UNROLLED FLAT PATTERN (SHEET METAL BLUEPRINT)",
+    "sheet": "SHEET",
+    "zoom": "Zoom",
+    "length": "TOTAL LENGTH",
+    "circumference": "CIRCUMFERENCE",
+    "legendCut": "Cut Outline",
+    "legendPierce": "Pierce Point",
+    "legendCenter": "Tube Center Line (180°)"
+  },
+  "gcode": {
+    "title": "CNC FIBER LASER G-CODE GENERATOR",
+    "copy": "Copy G-Code",
+    "copied": "Copied!",
+    "download": "Download .NC File",
+    "format": "Format: Standard ISO / Rotary A-Axis Interpolation"
+  }
+}
