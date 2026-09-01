@@ -43,49 +43,67 @@ export function generateTubeGCode(state: CadState): string {
 
   gcode += `G21 (Units: Millimeters)\n`;
   gcode += `G90 (Absolute Positioning Mode)\n`;
-  gcode += `G92 Z0 A0 (Set Rotary & Axis Zero Reference)\n`;
+  gcode += `G92 X0 Y0 Z0 A0 (Set Axis Zero Reference)\n`;
   gcode += `M08 (Assist Gas ${assistGas.toUpperCase()} Solenoid ON)\n\n`;
   gcode += `( --- ROTARY TUBE HOMING --- )\n`;
-  gcode += `G0 Z0.000 A0.000\n\n`;
+  gcode += `G0 X0.000 Y0.000 Z0.000 A0.000\n\n`;
 
   enabledCuts.forEach((cut, index) => {
     gcode += `( --- FEATURE ${index + 1}: ${cut.name.toUpperCase()} --- )\n`;
-    const zCenter = cut.positionZ;
-    const aCenter = cut.polarAngle;
+    const xCenter = cut.positionZ; // Longitudinal axis
+    const aCenter = cut.polarAngle; // Rotary axis
+    const yCenter = (aCenter / 360) * circumference; // Unrolled linear Y axis
 
     if (cut.type === 'hole') {
       const radius = cut.radius;
-      const angleDeltaDeg = ((radius / circumference) * 360).toFixed(3);
+      const angleDeltaDeg = (radius / circumference) * 360;
 
-      gcode += `( CIRCULAR HOLE DIA ${radius * 2}mm AT Z=${zCenter}mm, A=${aCenter}° )\n`;
-      gcode += `G0 Z${zCenter.toFixed(3)} A${aCenter.toFixed(3)} (Rapid to Piercing Center)\n`;
+      gcode += `( CIRCULAR HOLE DIA ${radius * 2}mm AT X=${xCenter}mm, A=${aCenter}° )\n`;
+      gcode += `G0 X${xCenter.toFixed(3)} Y${yCenter.toFixed(3)} A${aCenter.toFixed(3)} (Rapid to Piercing Center)\n`;
       gcode += `M03 S${(laserPowerKW * 1000).toFixed(0)} (Laser Piercing ON)\n`;
       gcode += `G4 P200 (Dwell 200ms for Pierce)\n`;
-      gcode += `G1 Z${(zCenter + radius).toFixed(3)} A${aCenter.toFixed(3)} F${feedRateMmPerMin}\n`;
-      gcode += `G1 Z${zCenter.toFixed(3)} A${(aCenter + Number(angleDeltaDeg)).toFixed(3)}\n`;
-      gcode += `G1 Z${(zCenter - radius).toFixed(3)} A${aCenter.toFixed(3)}\n`;
-      gcode += `G1 Z${zCenter.toFixed(3)} A${(aCenter - Number(angleDeltaDeg)).toFixed(3)}\n`;
-      gcode += `G1 Z${(zCenter + radius).toFixed(3)} A${aCenter.toFixed(3)}\n`;
+      
+      const topX = xCenter + radius;
+      const rightA = aCenter + angleDeltaDeg;
+      const rightY = (rightA / 360) * circumference;
+      const bottomX = xCenter - radius;
+      const leftA = aCenter - angleDeltaDeg;
+      const leftY = (leftA / 360) * circumference;
+
+      gcode += `G1 X${topX.toFixed(3)} Y${yCenter.toFixed(3)} A${aCenter.toFixed(3)} F${feedRateMmPerMin}\n`;
+      gcode += `G1 X${xCenter.toFixed(3)} Y${rightY.toFixed(3)} A${rightA.toFixed(3)}\n`;
+      gcode += `G1 X${bottomX.toFixed(3)} Y${yCenter.toFixed(3)} A${aCenter.toFixed(3)}\n`;
+      gcode += `G1 X${xCenter.toFixed(3)} Y${leftY.toFixed(3)} A${leftA.toFixed(3)}\n`;
+      gcode += `G1 X${topX.toFixed(3)} Y${yCenter.toFixed(3)} A${aCenter.toFixed(3)}\n`;
       gcode += `M05 (Laser OFF)\n\n`;
     } else if (cut.type === 'slot') {
       const halfL = cut.slotLength / 2;
-      const halfWAngle = Number(((cut.slotWidth / 2 / circumference) * 360).toFixed(3));
+      const halfWAngle = (cut.slotWidth / 2 / circumference) * 360;
 
-      gcode += `( RECTANGULAR SLOT ${cut.slotLength}x${cut.slotWidth}mm AT Z=${zCenter}mm, A=${aCenter}° )\n`;
-      gcode += `G0 Z${(zCenter - halfL).toFixed(3)} A${(aCenter - halfWAngle).toFixed(3)} (Rapid to Corner)\n`;
+      const topX = xCenter + halfL;
+      const bottomX = xCenter - halfL;
+      const rightA = aCenter + halfWAngle;
+      const leftA = aCenter - halfWAngle;
+      const rightY = (rightA / 360) * circumference;
+      const leftY = (leftA / 360) * circumference;
+
+      gcode += `( RECTANGULAR SLOT ${cut.slotLength}x${cut.slotWidth}mm AT X=${xCenter}mm, A=${aCenter}° )\n`;
+      gcode += `G0 X${bottomX.toFixed(3)} Y${leftY.toFixed(3)} A${leftA.toFixed(3)} (Rapid to Corner)\n`;
       gcode += `M03 S${(laserPowerKW * 1000).toFixed(0)} (Laser ON)\n`;
       gcode += `G4 P200 (Pierce Dwell)\n`;
-      gcode += `G1 Z${(zCenter + halfL).toFixed(3)} A${(aCenter - halfWAngle).toFixed(3)} F${feedRateMmPerMin}\n`;
-      gcode += `G1 Z${(zCenter + halfL).toFixed(3)} A${(aCenter + halfWAngle).toFixed(3)}\n`;
-      gcode += `G1 Z${(zCenter - halfL).toFixed(3)} A${(aCenter + halfWAngle).toFixed(3)}\n`;
-      gcode += `G1 Z${(zCenter - halfL).toFixed(3)} A${(aCenter - halfWAngle).toFixed(3)}\n`;
+      gcode += `G1 X${topX.toFixed(3)} Y${leftY.toFixed(3)} A${leftA.toFixed(3)} F${feedRateMmPerMin}\n`;
+      gcode += `G1 X${topX.toFixed(3)} Y${rightY.toFixed(3)} A${rightA.toFixed(3)}\n`;
+      gcode += `G1 X${bottomX.toFixed(3)} Y${rightY.toFixed(3)} A${rightA.toFixed(3)}\n`;
+      gcode += `G1 X${bottomX.toFixed(3)} Y${leftY.toFixed(3)} A${leftA.toFixed(3)}\n`;
       gcode += `M05 (Laser OFF)\n\n`;
     } else if (cut.type === 'mitre_start' || cut.type === 'mitre_end') {
-      const zPos = cut.type === 'mitre_start' ? 0 : length;
-      gcode += `( MITRE BEVEL CUT ${cut.mitreAngle}° AT Z=${zPos}mm )\n`;
-      gcode += `G0 Z${zPos.toFixed(3)} A0.000\n`;
+      const xPos = cut.type === 'mitre_start' ? 0 : length;
+      const endY = circumference;
+
+      gcode += `( MITRE BEVEL CUT ${cut.mitreAngle}° AT X=${xPos}mm )\n`;
+      gcode += `G0 X${xPos.toFixed(3)} Y0.000 A0.000\n`;
       gcode += `M03 S${(laserPowerKW * 1000).toFixed(0)}\n`;
-      gcode += `G1 Z${zPos.toFixed(3)} A360.000 F${feedRateMmPerMin} (360 Deg Rotary Bevel Cut)\n`;
+      gcode += `G1 X${xPos.toFixed(3)} Y${endY.toFixed(3)} A360.000 F${feedRateMmPerMin} (360 Deg Rotary Bevel Cut)\n`;
       gcode += `M05 (Laser OFF)\n\n`;
     }
   });
@@ -93,7 +111,7 @@ export function generateTubeGCode(state: CadState): string {
   gcode += `( --- PROGRAM END & RETRACT --- )\n`;
   gcode += `M05 (Ensure Laser OFF)\n`;
   gcode += `M09 (Assist Gas OFF)\n`;
-  gcode += `G0 Z0.000 A0.000 (Return to Machine Home)\n`;
+  gcode += `G0 X0.000 Y0.000 Z0.000 A0.000 (Return to Machine Home)\n`;
   gcode += `M30 (End of Program)\n`;
 
   return gcode;

@@ -42,7 +42,8 @@ export class DxfExportService {
         dxf += `0\nLINE\n8\nCUTS\n10\n${x2}\n20\n${y2}\n11\n${x1}\n21\n${y2}\n`;
         dxf += `0\nLINE\n8\nCUTS\n10\n${x1}\n20\n${y2}\n11\n${x1}\n21\n${y1}\n`;
       } else if (cut.type === 'mitre_start' || cut.type === 'mitre_end') {
-        dxf += `0\nLINE\n8\nCUTS\n10\n${xCenter.toFixed(3)}\n20\n0.0\n11\n${xCenter.toFixed(3)}\n21\n${circumference.toFixed(3)}\n`;
+        const xPos = cut.type === 'mitre_start' ? 0 : length;
+        dxf += `0\nLINE\n8\nCUTS\n10\n${xPos.toFixed(3)}\n20\n0.0\n11\n${xPos.toFixed(3)}\n21\n${circumference.toFixed(3)}\n`;
       }
     });
 

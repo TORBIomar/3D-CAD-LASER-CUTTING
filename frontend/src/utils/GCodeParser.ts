@@ -61,23 +61,23 @@ export function parseGCodeFile(gcodeContent: string): ParsedGCodeResult {
     }
 
     if (line.startsWith('G0') || line.startsWith('G1')) {
-      const matchZ = line.match(/Z([\d.-]+)/);
+      const matchX = line.match(/X([\d.-]+)/) || line.match(/Z([\d.-]+)/); // Fallback to Z for backward compat
       const matchA = line.match(/A([\d.-]+)/);
 
-      if (matchZ && matchA) {
-        const zVal = Math.abs(parseFloat(matchZ[1]));
+      if (matchX && matchA) {
+        const xVal = Math.abs(parseFloat(matchX[1]));
         const aVal = Math.abs(parseFloat(matchA[1])) % 360;
 
-        if (zVal > 0 && zVal <= length) {
+        if (xVal > 0 && xVal <= length) {
           const cutId = `parsed-${cuts.length + 1}-${Date.now()}`;
-          const exists = cuts.some((c) => Math.abs(c.positionZ - zVal) < 5);
+          const exists = cuts.some((c) => Math.abs(c.positionZ - xVal) < 5);
 
           if (!exists) {
             cuts.push({
               id: cutId,
-              name: currentFeatureName || `Cut ${cuts.length + 1} @ ${zVal.toFixed(0)}mm`,
+              name: currentFeatureName || `Cut ${cuts.length + 1} @ ${xVal.toFixed(0)}mm`,
               type: currentFeatureType,
-              positionZ: zVal,
+              positionZ: xVal,
               polarAngle: aVal,
               radius: currentFeatureType === 'hole' ? 15 : 10,
               slotLength: 50,
